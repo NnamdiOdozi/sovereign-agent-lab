@@ -15,7 +15,7 @@ TASK_A_TOOLS_CALLED = ["check_pub_availability", "calculate_catering_cost", "get
 
 # Which venue did the agent confirm? Must be one of:
 # "The Albanach", "The Haymarket Vaults", or "none"
-TASK_A_CONFIRMED_VENUE = ["The Albanach", "The Haymarket Vaults"]
+TASK_A_CONFIRMED_VENUE = "The Haymarket Vaults"
 
 # Total catering cost the agent calculated. Float, e.g. 5600.0
 # Write 0.0 if the agent didn't calculate it.
@@ -62,7 +62,7 @@ None of the known venues meet the capacity and dietary requirements.
 
 # Scenario 3: out of scope (train times)
 # Did the agent try to call a tool?
-SCENARIO_3_TRIED_A_TOOL = None   # True or False
+SCENARIO_3_TRIED_A_TOOL = False   # True or False
 
 SCENARIO_3_RESPONSE = "FILL_ME_IN"
 
@@ -96,7 +96,7 @@ graph TD;
 
 # Compare the LangGraph graph to exercise3_rasa/data/rules.yml. Min 30 words.
 TASK_D_COMPARISON = """
-FILL ME IN
+The LangGraph shows a lot more freedom and flexibility compared to the Rasa agent.  It can make as many tool calls as it feels like in a way that cannot be envisaged at the start.  It feels like a risk because it could get into an infinite tool calling loop or make the wrong tool calls. The Rasa CALM agent in comparison is a lot more bounded.
 """
 
 # ── Reflection ─────────────────────────────────────────────────────────────
@@ -105,5 +105,5 @@ FILL ME IN
 # Must reference a specific behaviour from your run.
 
 MOST_SURPRISING = """
-I was surprised that the agent was asking for more information from the user when asked about train times even though it didn't have any tools to check train times or to do a web search. 
+I was surprised that the agent was asking for more information from the user when asked about train times even though it didn't have any tools to check train times or to do a web search. It should have recognised the request was out of scope and said so clearly, rather than leading the user on.
 """

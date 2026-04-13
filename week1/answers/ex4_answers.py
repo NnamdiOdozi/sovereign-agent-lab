@@ -39,11 +39,11 @@ It offers modularity, openness and a single source of truth.  The LangGraph agen
 # naming a component and explaining why that component does that job.
 
 WEEK_5_ARCHITECTURE = """
-- FILL ME IN
-- FILL ME IN
-- FILL ME IN
-- FILL ME IN
-- FILL ME IN
+- A LangGraph ReAct agent handles the research tasks because it needs the flexibility to decide which tools to call and in what order based on unpredictable user queries.
+- A Rasa CALM agent handles the booking confirmation calls because the conversation follows a fixed script and business rules must be enforced deterministically in Python, not by an LLM.
+- An MCP server exposes shared venue tools so that both the research agent and the booking agent read from the same data source, avoiding drift between separate tool definitions.
+- A vector knowledge base with hybrid retrieval stores venue details, menus, and past event records so the research agent can answer questions without hardcoding every fact into tool functions.
+- Prompt injection and memory poisoning defences sit at the input boundary because the agents accept untrusted user input and must not be manipulated into bypassing business rules or leaking internal data.
 """
 
 # ── The guiding question ───────────────────────────────────────────────────
@@ -51,5 +51,9 @@ WEEK_5_ARCHITECTURE = """
 # Must reference specific things you observed in your runs. Min 60 words.
 
 GUIDING_QUESTION_ANSWER = """
-FILL ME IN
+LangGraph is the right choice for the research task because it needs to improvise — deciding which venues to search, fetching details, checking weather, and generating a flyer in whatever order makes sense. In exercise 2 the agent made six tool calls across four different tools, and the exact sequence depended on what each tool returned. You could not have written that as a fixed flow in advance.
+
+Rasa CALM is the right choice for the booking confirmation call because the conversation always follows the same three steps — collect guest count, vegan count, and deposit — then check Rod's rules. In exercise 3 the business constraints were enforced in Python, not by an LLM, which meant the bot could not be talked into accepting an over-budget deposit.
+
+Swapping them would feel wrong because a Rasa flow cannot improvise a research plan on the fly, and a LangGraph agent cannot guarantee it will always enforce the deposit limit or capacity ceiling deterministically. Each agent's strength is the other's weakness.
 """

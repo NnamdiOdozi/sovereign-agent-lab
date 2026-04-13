@@ -115,7 +115,7 @@ In contrast, the exercise 2 agent when asked about train times confusingly and m
 TASK_B_DONE = True   # True or False
 
 # List every file you changed.
-TASK_B_FILES_CHANGED = [actions.py]
+TASK_B_FILES_CHANGED = ["actions.py"]
 
 # How did you test that it works? Min 20 words.
 TASK_B_HOW_YOU_TESTED = """
