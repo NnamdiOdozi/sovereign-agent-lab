@@ -84,9 +84,18 @@ TOOLS = [
     generate_event_flyer,
 ]
 
+# AMENDMENT [Nnamdi, 2026-04-11]: Added system prompt so Llama 3.3 70B on Nebius
+# uses structured tool calls instead of dumping raw JSON text in content.
+# Without this, complex multi-tool prompts cause the model to output tool calls
+# as plain text strings, which LangGraph cannot execute.
+SYSTEM_PROMPT = (
+    "You are a helpful assistant. Use the provided tools one at a time to "
+    "complete the task. Do not output raw JSON — always use the tool calling interface."
+)
+
 # Build the agent once at module load time.
 # Rebuilding it on every call would be wasteful.
-_agent = create_react_agent(llm, TOOLS)
+_agent = create_react_agent(llm, TOOLS, prompt=SYSTEM_PROMPT)
 
 
 # ─── Public interface ─────────────────────────────────────────────────────────
@@ -122,7 +131,22 @@ def run_research_agent(task: str, max_turns: int = 8) -> dict:
         role    = getattr(m, "type", "unknown")
         content = m.content
 
-        # Tool-call messages have structured list content
+        # AMENDMENT [Nnamdi, 2026-04-11]: Original code only handled Anthropic-format
+        # tool calls (type: "tool_use" in content list). Nebius/Llama endpoint returns
+        # tool calls in OpenAI format via m.tool_calls instead. Added this block so
+        # tool calls are detected regardless of provider format.
+        # OpenAI-format tool calls (Nebius/Llama endpoint) — live in m.tool_calls
+        if hasattr(m, "tool_calls") and m.tool_calls:
+            for tc in m.tool_calls:
+                entry = {
+                    "tool": tc["name"],
+                    "args": tc.get("args", {}),
+                }
+                tool_calls_made.append(entry)
+                full_trace.append({"role": "tool_call", **entry})
+            continue
+
+        # Anthropic-format tool calls — live in m.content as list of dicts
         if isinstance(content, list):
             for block in content:
                 if isinstance(block, dict) and block.get("type") == "tool_use":

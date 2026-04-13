@@ -18,6 +18,7 @@ var/
 wheels/
 share/python-wheels/
 *.egg-info/
+.claude/
 .installed.cfg
 *.egg
 MANIFEST
@@ -148,6 +149,9 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 .abstra/
+
+# my additions
+aide-memoire
 
 # uv.lock files are intentionally committed — they pin dependencies for
 # reproducible student environments. Do not add them here.
